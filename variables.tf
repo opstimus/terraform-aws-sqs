@@ -13,7 +13,12 @@ variable "name" {
   description = "Service name"
 }
 
-variable "fifo_queue" {
+variable "enable_dlq" {
+  type    = bool
+  default = false
+}
+
+variable "enable_fifo" {
   type        = bool
   default     = false
   description = "FIFO queue enable/disable"
