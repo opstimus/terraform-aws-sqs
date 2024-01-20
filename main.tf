@@ -7,12 +7,12 @@ resource "aws_sqs_queue" "main" {
   delay_seconds              = var.delay_seconds
   receive_wait_time_seconds  = var.receive_wait_time_seconds
   policy                     = var.policy
-  deduplication_scope   = var.enable_fifo == true && var.enable_high_throughput == true ? "messageGroup" : ((var.enable_fifo == true && var.enable_high_throughput == false) ? "queue" : null)
-  fifo_throughput_limit = var.enable_fifo == true && var.enable_high_throughput == true ? "perMessageGroupId" : ((var.enable_fifo == true && var.enable_high_throughput == false) ? "perQueue" : null)
+  deduplication_scope        = var.enable_fifo == true && var.enable_high_throughput == true ? "messageGroup" : ((var.enable_fifo == true && var.enable_high_throughput == false) ? "queue" : null)
+  fifo_throughput_limit      = var.enable_fifo == true && var.enable_high_throughput == true ? "perMessageGroupId" : ((var.enable_fifo == true && var.enable_high_throughput == false) ? "perQueue" : null)
 }
 
 resource "aws_sqs_queue_redrive_policy" "main" {
-  count = var.enable_dlq ? 1 : 0
+  count     = var.enable_dlq ? 1 : 0
   queue_url = aws_sqs_queue.main.id
   redrive_policy = jsonencode({
     deadLetterTargetArn = aws_sqs_queue.main_deadletter_queue[0].arn
