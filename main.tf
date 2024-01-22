@@ -15,12 +15,12 @@ resource "aws_sqs_queue_redrive_policy" "main" {
   count     = var.enable_dlq ? 1 : 0
   queue_url = aws_sqs_queue.main.id
   redrive_policy = jsonencode({
-    deadLetterTargetArn = aws_sqs_queue.main_deadletter_queue[0].arn
+    deadLetterTargetArn = aws_sqs_queue.dlq[0].arn
     maxReceiveCount     = var.max_receive_count
   })
 }
 
-resource "aws_sqs_queue" "main_deadletter_queue" {
+resource "aws_sqs_queue" "dlq" {
   count                     = var.enable_dlq ? 1 : 0
   name                      = var.enable_fifo == true ? "${var.project}-${var.environment}-${var.name}-dlq.fifo" : "${var.project}-${var.environment}-${var.name}-dlq"
   fifo_queue                = var.enable_fifo
@@ -29,7 +29,7 @@ resource "aws_sqs_queue" "main_deadletter_queue" {
 
 resource "aws_sqs_queue_redrive_allow_policy" "main" {
   count     = var.enable_dlq ? 1 : 0
-  queue_url = aws_sqs_queue.main_deadletter_queue[0].id
+  queue_url = aws_sqs_queue.dlq[0].id
 
   redrive_allow_policy = jsonencode({
     redrivePermission = "byQueue",
