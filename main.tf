@@ -24,7 +24,7 @@ resource "aws_sqs_queue" "main_dlq" {
   count                     = var.enable_dlq ? 1 : 0
   name                      = var.enable_fifo == true ? "${var.project}-${var.environment}-${var.name}-dlq.fifo" : "${var.project}-${var.environment}-${var.name}-dlq"
   fifo_queue                = var.enable_fifo
-  message_retention_seconds = var.dlq_message_retention_seconds
+  message_retention_seconds = var.message_retention_seconds_dlq
 }
 
 resource "aws_sqs_queue_redrive_allow_policy" "main" {
