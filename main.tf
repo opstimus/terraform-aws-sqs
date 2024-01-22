@@ -22,7 +22,7 @@ resource "aws_sqs_queue_redrive_policy" "main" {
 
 resource "aws_sqs_queue" "main_deadletter_queue" {
   count                     = var.enable_dlq ? 1 : 0
-  name                      = var.enable_fifo == true ? "${var.project}-${var.environment}-${var.name}-deadletter-queue.fifo" : "${var.project}-${var.environment}-${var.name}-deadletter-queue"
+  name                      = var.enable_fifo == true ? "${var.project}-${var.environment}-${var.name}-dlq.fifo" : "${var.project}-${var.environment}-${var.name}-dlq"
   fifo_queue                = var.enable_fifo
   message_retention_seconds = var.dlq_message_retention_seconds
 }
