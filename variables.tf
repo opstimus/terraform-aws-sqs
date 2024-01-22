@@ -60,7 +60,7 @@ variable "policy" {
   default     = null
 }
 
-variable "maxReceiveCount" {
+variable "max_receive_count" {
   type        = number
   description = "The maxReceiveCount is the number of times a consumer tries receiving a message from a queue without deleting it before being moved to the dead-letter queue"
   default     = 5
@@ -69,6 +69,12 @@ variable "maxReceiveCount" {
 variable "enable_high_throughput" {
   type    = bool
   default = false
+}
+
+variable "dlq_message_retention_seconds" {
+  type        = number
+  description = "The number of seconds Amazon SQS retains a message in DLQ"
+  default     = 345600
 }
 
 # variable "deduplication_scope" {

@@ -16,14 +16,15 @@ resource "aws_sqs_queue_redrive_policy" "main" {
   queue_url = aws_sqs_queue.main.id
   redrive_policy = jsonencode({
     deadLetterTargetArn = aws_sqs_queue.main_deadletter_queue[0].arn
-    maxReceiveCount     = var.maxReceiveCount
+    maxReceiveCount     = var.max_receive_count
   })
 }
 
 resource "aws_sqs_queue" "main_deadletter_queue" {
-  count      = var.enable_dlq ? 1 : 0
-  name       = var.enable_fifo == true ? "${var.project}-${var.environment}-${var.name}-deadletter-queue.fifo" : "${var.project}-${var.environment}-${var.name}-deadletter-queue"
-  fifo_queue = var.enable_fifo
+  count                     = var.enable_dlq ? 1 : 0
+  name                      = var.enable_fifo == true ? "${var.project}-${var.environment}-${var.name}-deadletter-queue.fifo" : "${var.project}-${var.environment}-${var.name}-deadletter-queue"
+  fifo_queue                = var.enable_fifo
+  message_retention_seconds = var.dlq_message_retention_seconds
 }
 
 resource "aws_sqs_queue_redrive_allow_policy" "main" {
