@@ -9,6 +9,7 @@ resource "aws_sqs_queue" "main" {
   policy                     = var.policy
   deduplication_scope        = var.enable_fifo == true && var.enable_high_throughput == true ? "messageGroup" : ((var.enable_fifo == true && var.enable_high_throughput == false) ? "queue" : null)
   fifo_throughput_limit      = var.enable_fifo == true && var.enable_high_throughput == true ? "perMessageGroupId" : ((var.enable_fifo == true && var.enable_high_throughput == false) ? "perQueue" : null)
+  sqs_managed_sse_enabled    = true
 }
 
 resource "aws_sqs_queue_redrive_policy" "main" {
@@ -25,6 +26,7 @@ resource "aws_sqs_queue" "main_dlq" {
   name                      = var.enable_fifo == true ? "${var.project}-${var.environment}-${var.name}-dlq.fifo" : "${var.project}-${var.environment}-${var.name}-dlq"
   fifo_queue                = var.enable_fifo
   message_retention_seconds = var.message_retention_seconds_dlq
+  sqs_managed_sse_enabled   = true
 }
 
 resource "aws_sqs_queue_redrive_allow_policy" "main" {
