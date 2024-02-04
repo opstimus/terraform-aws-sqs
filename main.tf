@@ -53,6 +53,7 @@ resource "aws_sqs_queue" "dlq" {
 }
 
 data "aws_iam_policy_document" "dql" {
+  count = var.enable_dlq ? 1 : 0
   statement {
     sid    = "Default"
     effect = "Allow"
@@ -63,13 +64,14 @@ data "aws_iam_policy_document" "dql" {
     }
 
     actions   = ["sqs:*"]
-    resources = [aws_sqs_queue.dlq.arn]
+    resources = [aws_sqs_queue.dlq[0].arn]
   }
 }
 
 resource "aws_sqs_queue_policy" "dql" {
-  queue_url = aws_sqs_queue.dlq.id
-  policy    = var.policy != null ? data.aws_iam_policy_document.dlq.json : var.policy
+  count     = var.enable_dlq ? 1 : 0
+  queue_url = aws_sqs_queue.dlq[0].id
+  policy    = var.policy != null ? data.aws_iam_policy_document.dlq[0].json : var.policy
 }
 
 resource "aws_sqs_queue_redrive_allow_policy" "main" {
