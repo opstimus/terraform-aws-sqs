@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 resource "aws_sqs_queue" "main" {
   name                       = var.enable_fifo == true ? "${var.project}-${var.environment}-${var.name}.fifo" : "${var.project}-${var.environment}-${var.name}"
   fifo_queue                 = var.enable_fifo
@@ -11,6 +13,27 @@ resource "aws_sqs_queue" "main" {
   fifo_throughput_limit      = var.enable_fifo == true && var.enable_high_throughput == true ? "perMessageGroupId" : ((var.enable_fifo == true && var.enable_high_throughput == false) ? "perQueue" : null)
   sqs_managed_sse_enabled    = true
 }
+
+data "aws_iam_policy_document" "main" {
+  statement {
+    sid    = "Default"
+    effect = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+    }
+
+    actions   = ["sqs:*"]
+    resources = [aws_sqs_queue.main.arn]
+  }
+}
+
+resource "aws_sqs_queue_policy" "main" {
+  queue_url = aws_sqs_queue.main.id
+  policy    = var.policy != null ? data.aws_iam_policy_document.main.json : var.policy
+}
+
 
 resource "aws_sqs_queue_redrive_policy" "main" {
   count     = var.enable_dlq ? 1 : 0
@@ -27,6 +50,26 @@ resource "aws_sqs_queue" "dlq" {
   fifo_queue                = var.enable_fifo
   message_retention_seconds = var.message_retention_seconds_dlq
   sqs_managed_sse_enabled   = true
+}
+
+data "aws_iam_policy_document" "dql" {
+  statement {
+    sid    = "Default"
+    effect = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+    }
+
+    actions   = ["sqs:*"]
+    resources = [aws_sqs_queue.dlq.arn]
+  }
+}
+
+resource "aws_sqs_queue_policy" "dql" {
+  queue_url = aws_sqs_queue.dlq.id
+  policy    = var.policy != null ? data.aws_iam_policy_document.dlq.json : var.policy
 }
 
 resource "aws_sqs_queue_redrive_allow_policy" "main" {
