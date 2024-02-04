@@ -74,7 +74,7 @@ variable "enable_high_throughput" {
 variable "message_retention_seconds_dlq" {
   type        = number
   description = "The number of seconds Amazon SQS retains a message in DLQ"
-  default     = 345600
+  default     = 1209600
 }
 
 # variable "deduplication_scope" {
