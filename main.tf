@@ -52,7 +52,7 @@ resource "aws_sqs_queue" "dlq" {
   sqs_managed_sse_enabled   = true
 }
 
-data "aws_iam_policy_document" "dql" {
+data "aws_iam_policy_document" "dlq" {
   count = var.enable_dlq ? 1 : 0
   statement {
     sid    = "Default"
@@ -68,7 +68,7 @@ data "aws_iam_policy_document" "dql" {
   }
 }
 
-resource "aws_sqs_queue_policy" "dql" {
+resource "aws_sqs_queue_policy" "dlq" {
   count     = var.enable_dlq ? 1 : 0
   queue_url = aws_sqs_queue.dlq[0].id
   policy    = var.policy == null ? data.aws_iam_policy_document.dlq[0].json : var.policy
