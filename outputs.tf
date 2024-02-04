@@ -7,9 +7,9 @@ output "sqs_url" {
 }
 
 output "dlq_sqs_arn" {
-  value = var.enable_dlq == true ? aws_sqs_queue.main_deadletter_queue[0].arn : null
+  value = var.enable_dlq == true ? aws_sqs_queue.dlq[0].arn : null
 }
 
 output "dlq_sqs_url" {
-  value = var.enable_dlq == true ? aws_sqs_queue.main_deadletter_queue[0].url : null
+  value = var.enable_dlq == true ? aws_sqs_queue.dlq[0].url : null
 }
