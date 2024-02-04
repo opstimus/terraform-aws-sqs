@@ -31,7 +31,7 @@ data "aws_iam_policy_document" "main" {
 
 resource "aws_sqs_queue_policy" "main" {
   queue_url = aws_sqs_queue.main.id
-  policy    = var.policy != null ? data.aws_iam_policy_document.main.json : var.policy
+  policy    = var.policy == null ? data.aws_iam_policy_document.main.json : var.policy
 }
 
 
@@ -71,7 +71,7 @@ data "aws_iam_policy_document" "dql" {
 resource "aws_sqs_queue_policy" "dql" {
   count     = var.enable_dlq ? 1 : 0
   queue_url = aws_sqs_queue.dlq[0].id
-  policy    = var.policy != null ? data.aws_iam_policy_document.dlq[0].json : var.policy
+  policy    = var.policy == null ? data.aws_iam_policy_document.dlq[0].json : var.policy
 }
 
 resource "aws_sqs_queue_redrive_allow_policy" "main" {
