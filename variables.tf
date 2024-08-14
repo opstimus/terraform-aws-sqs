@@ -76,15 +76,3 @@ variable "message_retention_seconds_dlq" {
   description = "The number of seconds Amazon SQS retains a message in DLQ"
   default     = 1209600
 }
-
-# variable "deduplication_scope" {
-#   type        = string
-#   description = "Specifies whether message deduplication occurs at the message group or queue level. Valid values are messageGroup | queue"
-#   default     = "queue"
-# }
-
-# variable "fifo_throughput_limit" {
-#   type        = string
-#   description = "Specifies whether the FIFO queue throughput quota applies to the entire queue or per message group. Valid values are perQueue | perMessageGroupId"
-#   default     = "perQueue"
-# }
