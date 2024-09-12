@@ -51,13 +51,13 @@ This Terraform module provisions an AWS SQS queue and optional dead-letter queue
 
 ```hcl
 module "sqs" {
-  source  = "./path-to-your-module"
+  source  = "https://github.com/opstimus/terraform-aws-sqs?ref=v<RELEASE>"
 
-  project                     = "my-project"
-  environment                 = "production"
-  name                        = "service-queue"
-  enable_fifo                 = true
-  enable_dlq                  = true
+  project                      = "my-project"
+  environment                  = "production"
+  name                         = "service-queue"
+  enable_fifo                  = true
+  enable_dlq                   = true
   visibility_timeout_seconds   = 60
   message_retention_seconds    = 1209600
   max_receive_count            = 5
