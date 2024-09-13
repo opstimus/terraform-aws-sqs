@@ -1,4 +1,4 @@
-# AWS SQS Terraform Module
+# SQS Module
 
 ## Description
 
