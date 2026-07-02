@@ -1,3 +1,12 @@
+> ⚠️ **Moved to the monorepo.**
+> This module now lives in [`opstimus/terraform-modules`](https://github.com/opstimus/terraform-modules) at `modules/aws-sqs`.
+>
+> ```hcl
+> source = "git::https://github.com/opstimus/terraform-modules.git//modules/aws-sqs?ref=aws-sqs/v2.0.0"
+> ```
+>
+> This repository remains for existing consumers; new development happens in the monorepo.
+
 # SQS Module
 
 ## Description
